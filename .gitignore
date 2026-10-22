@@ -1,0 +1,34 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.venv/
+venv/
+env/
+
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# SQLite database - may contain private student and face data
+*.db
+*.sqlite
+*.sqlite3
+
+# Student photos, face images and uploaded files
+uploads/
+media/
+face_data/
+known_faces/
+
+# Frontend dependencies and build files
+node_modules/
+dist/
+.next/
+
+# Logs and temporary files
+*.log
+.DS_Store
+Thumbs.db
