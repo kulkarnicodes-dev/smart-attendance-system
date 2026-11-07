@@ -1,84 +1,308 @@
-# Smart Attendance Management System v2 (Campus edition)
+# Smart Attendance Management System
+### MCA First-Year Mini Project | Campus Edition
 
-Roles: **Admin / Teacher / Student**  |  Lecture-wise sessions  |  Face recognition  |  Timetable  |  Analytics  |
-Correction requests  |  Audit log  |  Notifications
+An AI-powered Smart Attendance Management System developed to automate college attendance using face recognition, lecture-wise sessions, and role-based management.
 
-Stack: React + Tailwind + Recharts, FastAPI + SQLAlchemy, OpenCV (YuNet + SFace), SQLite (or MySQL), JWT.
-**No new Python or npm packages were added in v2.**
+<p align="center">
+  <a href="https://smart-attendance-system-neon.vercel.app/">🌐 Live Project Demo</a> ·
+  <a href="https://smart-attendance-system-3pts.onrender.com/">⚙️ Backend API</a> ·
+  <a href="https://smart-attendance-system-3pts.onrender.com/docs">📚 API Documentation</a>
+</p>
 
-## 1. Upgrading your running v1 project (keeps your data)
+---
 
-1. Close both terminals (backend + frontend).
-2. Extract this zip **over your existing `smart-attendance` folder** (say "replace" for files). Your `backend/.env`,
-   `backend/models/*.onnx` and `backend/attendance.db` are not in the zip, so they stay untouched.
-3. Start the backend as before. On first start it detects the old database, writes a backup copy
-   (`attendance.v1-backup-<time>.db`) and migrates it automatically:
-   - old users stay (admin keeps the same password), students and **face data are preserved**,
-   - old attendance becomes finalized "General (migrated v1 attendance)" lecture sessions.
-4. `cd frontend && npm run dev` (run `npm install` only if it complains).
+## 🎓 Academic Project Details
 
-## 2. Run commands (CMD)
+| Detail | Information |
+|---|---|
+| Project Title | Smart Attendance Management System |
+| Project Type | MCA First-Year Mini Project |
+| College Name | Zeal Institute of Business Administration, Computer Application and Research (ZIBACAR) |
+| Course | Master of Computer Applications (MCA) |
+| Project Domain | Artificial Intelligence and Web Development |
+| Project Category | Full-Stack Application |
+
+### 👨‍🎓 Project Team
+
+| Student Name | Roll Number |
+|---|---|
+| Yash Kulkarni | MC2628140 |
+| Aaryan Koshti | MC2628137 |
+
+### 👩‍🏫 Project Mentor
+
+**Madhuvi Shamkuwar**
+
+---
+
+## 🚀 Live Deployment
+
+| Component | Platform | Link |
+|---|---|---|
+| Frontend Application | Vercel | https://smart-attendance-system-neon.vercel.app/ |
+| Backend API | Render | https://smart-attendance-system-3pts.onrender.com/ |
+| API Documentation | FastAPI | https://smart-attendance-system-3pts.onrender.com/docs |
+| Health Check | FastAPI | https://smart-attendance-system-3pts.onrender.com/api/health |
+
+**Deployment note:** The backend currently uses temporary SQLite storage on Render's free plan. Database records may be lost when the service restarts or redeploys. This deployment is intended for testing and demonstration, not permanent attendance records.
+
+## 📌 Project Overview
+
+The Smart Attendance Management System is designed to simplify and automate attendance management in colleges and educational institutions.
+
+The system uses face recognition to identify students and record lecture-wise attendance. It provides separate portals for Admin, Teachers, and Students.
+
+### Key Features
+
+- Admin, Teacher, and Student roles
+- Face recognition-based attendance
+- Lecture-wise attendance sessions
+- Student and teacher management
+- Course and subject management
+- Timetable management
+- Attendance analytics and reports
+- Attendance correction requests
+- Audit logs and notifications
+- CSV import and export
+- Secure authentication using JWT
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| Frontend | React, Tailwind CSS, Recharts |
+| Backend | Python, FastAPI |
+| Database | SQLite / MySQL |
+| ORM | SQLAlchemy |
+| Authentication | JWT, bcrypt |
+| Face Detection | OpenCV YuNet |
+| Face Recognition | OpenCV SFace |
+| Deployment | Vercel, Render |
+
+**Privacy:** The system stores face embeddings rather than raw face photographs.
+
+## 👥 User Roles
+
+### 1. Admin
+- Manage teacher and student accounts.
+- Approve student registrations.
+- Manage courses, subjects, and enrollments.
+- Assign teachers to subjects.
+- Import student records using CSV.
+- Create and manage timetables.
+- Configure attendance rules.
+- View reports and audit logs.
+- Manage correction requests.
+
+### 2. Teacher
+- View daily timetable.
+- Start lecture-wise attendance sessions.
+- Capture attendance using face recognition.
+- Manually mark attendance when required.
+- Review uncertain face matches.
+- Finalize and lock attendance sessions.
+- Approve or reject correction requests.
+
+### 3. Student
+- Register an account.
+- Register personal face data.
+- View attendance percentage.
+- Check subject-wise attendance.
+- View attendance history and timetable.
+- Receive low-attendance alerts.
+- Download attendance reports.
+- Submit attendance correction requests.
+
+## 🧠 Face Recognition Workflow
+
+1. Camera captures the student's face.
+2. OpenCV YuNet detects the face.
+3. OpenCV SFace generates a face embedding.
+4. The embedding is compared with registered face embeddings.
+5. Cosine similarity is used for matching.
+6. Uncertain matches are sent for teacher review.
+7. Confirmed attendance is saved against the active lecture session.
+
+## 🔐 Security and Attendance Rules
+
+- Every endpoint validates user roles on the backend.
+- Students cannot access another student's records by changing an ID.
+- Teachers can manage only their assigned subjects and sessions.
+- One attendance record is allowed per student per session.
+- Only enrolled students can be marked present.
+- Uncertain face matches are not automatically saved.
+- Changes after finalization require a reason and are audit-logged.
+- Passwords are hashed using bcrypt.
+- Login is locked after five incorrect password attempts.
+
+### Attendance Calculation
+
+`(Present + Late) / (Present + Late + Absent) × 100`
+
+Only finalized sessions are included. Excused attendance is excluded.
+
+## 💻 Local Installation
+
+### Prerequisites
+- Python 3.11
+- Node.js and npm
+- Git
+- VS Code
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/kulkarnicodes-dev/smart-attendance-system.git
+cd smart-attendance-system
+```
+
+### 2. Backend Setup
 
 ```cmd
-:: Terminal 1 - backend
-cd smart-attendance\backend
+cd backend
+python -m venv venv
 venv\Scripts\activate
-uvicorn app.main:app --reload --port 8000
+pip install -r requirements.txt
+```
 
-:: Terminal 2 - frontend
-cd smart-attendance\frontend
+Create `.env` using `.env.example` and configure the environment variables.
+
+Ensure these model files exist in `backend/models/`:
+
+```text
+face_detection_yunet_2023mar.onnx
+face_recognition_sface_2021dec.onnx
+```
+
+Start the backend:
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+Backend: `http://127.0.0.1:8000`
+
+API documentation: `http://127.0.0.1:8000/docs`
+
+### 3. Frontend Setup
+
+Open another terminal:
+
+```cmd
+cd frontend
+npm install
 npm run dev
 ```
-Open http://localhost:5173  (API docs: http://127.0.0.1:8000/docs).
-Fresh install: see the commands in `backend/run.bat` (venv, pip install, copy .env.example .env, download models).
 
-Optional demo data for your presentation (2 teachers, 8 students, 5 subjects, timetable):
+Frontend: `http://localhost:5173`
+
+## 🌱 Optional Demo Data
+
 ```cmd
-cd smart-attendance\backend
+cd backend
 python scripts\seed_demo.py
 ```
-Logins: `admin / admin123`, `teacher1 / teacher123`, `teacher2 / teacher123`, `student1..student8 / student123`.
 
-## 3. How each role works
+Sample local demo accounts:
 
-**Admin** - Users (approve students, create teachers, disable, reset password) - Academics (courses, subjects,
-teacher assignments, enrollments, CSV import) - Timetable (conflicts blocked) - Attendance rules (minimum %, late after N min)
-- Reports - Corrections - Audit log.
+| Role | Username | Password |
+|---|---|---|
+| Admin | admin | admin123 |
+| Teacher | teacher1 | teacher123 |
+| Teacher | teacher2 | teacher123 |
+| Student | student1 | student123 |
+| Student | student2 | student123 |
 
-**Teacher** - Dashboard shows today's timetable; **Start session** creates the lecture and opens the session room.
-In the room: *Start face attendance* (camera), manual mark with dropdown, review of uncertain matches,
-**Finalize & lock**. Unmarked students become Absent only after the teacher confirms.
+Additional student accounts are available through `student8`.
 
-**Student** - Registers (admin approves), registers own face, sees overall and subject-wise %, history, timetable,
-low-attendance alerts ("attend N more lectures"), downloads CSV, submits correction requests.
+These are local demo credentials generated by the seed script. They are not guaranteed to exist in the deployed application. Never use default credentials for a public production deployment.
 
-## 4. Suggested end-to-end demo
+## 🎯 Suggested Project Demonstration
 
-1. Admin: Academics -> add course/subjects -> Teacher assignments -> Enrollment -> *Enroll class*.
-2. Student: Register -> Admin approves in Users -> student logs in -> *My face data* -> capture 20 samples.
-3. Teacher: Dashboard -> Start session -> Start face attendance -> Finalize.
-4. Student: sees attendance and a notification if absent -> *Request correction* -> Teacher approves.
-5. Admin: Audit log shows every change.
+1. Admin creates courses and subjects.
+2. Admin assigns teachers to subjects.
+3. Admin enrolls students into classes.
+4. Students register and wait for approval.
+5. Students register face data using approximately 20 samples.
+6. Teacher starts a lecture attendance session.
+7. Teacher starts face recognition attendance.
+8. Teacher reviews uncertain matches and finalizes attendance.
+9. Students view attendance percentage and history.
+10. Students submit correction requests.
+11. Teacher reviews correction requests.
+12. Admin checks the audit log.
 
-## 5. Rules built into the backend (not just the UI)
+## 📂 Project Structure
 
-- Every endpoint checks the role server-side; a student cannot read another student's data by changing an ID.
-- Teachers only see/manage their own sessions and assigned subjects.
-- One record per student per session (database unique constraint).
-- Only students enrolled in the subject (and division) can be marked; others show "Not enrolled".
-- Matches slightly below the threshold are **not saved**; the teacher confirms them.
-- Late = marked after `late_after_min`. Percentage = (Present+Late) / (Present+Late+Absent) over **finalized** sessions;
-  Excused is excluded.
-- Changes after finalizing need a reason and are audit-logged. Face embeddings only - no photos stored.
-- Login lock after 5 wrong passwords; passwords hashed with bcrypt.
+```text
+smart-attendance-system/
+│
+├── backend/
+│   ├── app/
+│   ├── models/
+│   ├── scripts/
+│   ├── requirements.txt
+│   └── .env.example
+│
+├── database/
+├── docs/
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+│
+├── README.md
+└── PROGRESS.md
+```
 
-## 6. Troubleshooting
+## 🔧 Troubleshooting
 
-| Problem | Fix |
+| Problem | Solution |
 |---|---|
-| Teacher cannot pick a subject when creating a session | Admin must assign the teacher to that subject (Academics -> Teacher assignments) |
-| Roster is empty | Admin: Academics -> Enrollment -> *Enroll class* (student course/semester must match the subject's) |
-| "Account awaiting approval" | Admin: Users -> Approve |
-| Wrong person matched / real student unknown | tune `MATCH_THRESHOLD` / `REVIEW_MARGIN` in `backend/.env` |
-| Forgot password | Admin: Users -> Reset password (temporary password, forced change) |
-| Backup | `python scripts\backup_db.py` (SQLite) |
+| Teacher cannot select a subject | Assign the teacher to the subject from Admin → Academics. |
+| Student roster is empty | Enroll the class from Admin → Academics → Enrollment. |
+| Account awaiting approval | Admin must approve the student account. |
+| Face recognition not working | Verify ONNX model files exist in `backend/models/`. |
+| Incorrect face match | Review `MATCH_THRESHOLD` and `REVIEW_MARGIN`. |
+| Forgot password | Admin can reset the user's password. |
+| Backend unavailable | Check Render service status and backend logs. |
+| Frontend cannot connect | Verify API URL and CORS configuration. |
+
+## 🔮 Future Enhancements
+
+- Permanent cloud database integration.
+- Advanced attendance analytics.
+- Mobile-friendly portals.
+- Email and SMS notifications.
+- Improved face recognition performance.
+- Automated cloud database backups.
+- Additional reporting and export options.
+
+---
+
+## 👨‍💻 Project Credits
+
+**Project Title:** Smart Attendance Management System
+
+**Developed by:**
+- Yash Kulkarni — MC2628140
+- Aaryan Koshti — MC2628137
+
+**Project Mentor:** Madhuvi Shamkuwar
+
+**College:** Zeal Institute of Business Administration, Computer Application and Research (ZIBACAR)
+
+**Programme:** Master of Computer Applications (MCA)
+
+**Project Type:** MCA First-Year Mini Project
+
+**GitHub Repository:** https://github.com/kulkarnicodes-dev/smart-attendance-system
+
+---
+
+<p align="center">
+  <strong>Smart Attendance Management System</strong><br/>
+  <em>An MCA Mini Project — Making Campus Attendance Smarter with AI.</em>
+</p>
